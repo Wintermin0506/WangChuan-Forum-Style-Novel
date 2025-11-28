@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线掷杯筊 - 望川校园论坛</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header class="forum-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-area">
+                    <h1 class="logo">望川校园论坛</h1>
+                    <p class="tagline">连接你我青春</p>
+                </div>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav class="main-nav" id="mainNav">
+                    <ul>
+                        <li><a href="../../index.html" class="active">首页</a></li>
+                        <li><a href="../../sections/campus_life.html">日常杂谈</a></li>
+                        <li><a href="../../sections/study_group.html">学习交流</a></li>
+                        <li><a href="../../sections/mystery_corner.html">匿名树洞</a></li>
+                        <li><a href="../../sections/announcements.html">校内公告</a></li>
+                    </ul>
+                    <div class="user-actions">
+                        <button class="btn-login">登录</button>
+                        <button class="btn-register">注册</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <div class="post-detail-container">
+            <div class="post-detail-header-corner">
+                <h1 class="post-detail-title">在线掷杯筊</h1>
+                <div class="post-detail-meta">
+                    <span class="author">作者: 匿名用户eA3aZ8cV</span>
+                    <span class="time">发布时间: 1月1日</span>
+                </div>
+                <div class="post-detail-meta">
+                    <span class="views">浏览: 21,892</span>
+                    <span class="section">分区: <a href="../../sections/mystery_corner.html" style="color: white;">匿名树洞</a></span>
+                </div>
+            </div>
+            
+            <div class="post-detail-content">
+                <p>闲来无事做了一个在线掷杯筊，放在这里，分享给有需要的朋友。</p>
+                <p>先心中默念问题，然后点击"掷杯筊"按钮就可以了。</p>
+                    
+                <div class="poe-container">
+                    <div class="poe-piece" id="poe1">
+                        <div class="poe-shape flat"></div>
+                        <div class="poe-label">杯筊一</div>
+                    </div>
+                    <div class="poe-piece" id="poe2">
+                        <div class="poe-shape flat"></div>
+                        <div class="poe-label">杯筊二</div>
+                    </div>
+                </div>
+                    
+                <button class="poe-btn" id="throwBtn" style="display: block; margin: 0 auto;">掷杯筊</button>
+                <p> </p>
+                <div class="poe-result" id="result" style="display: block; margin: 0 auto;">等待掷杯...</div>
+                    
+                <div class="poe-history">
+                    <h3>最近掷杯记录（最多3次）</h3>
+                    <div id="history">
+                        <div class="poe-history-item">暂无记录</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 在主贴内容后面添加按钮 -->
+            <div class="actions" style="padding: 0 2rem 1.5rem 2rem;">
+                <button class="action-btn">👍 支持 (236)</button>
+                <button class="action-btn">👎 反对 (9)</button>
+                <button class="action-btn">↩️ 回复</button>
+                <button class="action-btn">⚠️ 举报</button>
+            </div>
+        </div>
+        
+        <div class="post-detail-container">
+            <div class="floor">
+                <div class="floor-header">
+                    <div>
+                        <span class="floor-author">匿名用户fI9hH9eO</span>
+                        <span class="floor-time">发布于 01-01 12:14:50</span>
+                    </div>
+                    <span class="floor-number">1楼</span>
+                </div>
+                <div class="floor-content">
+                    <p>我刚才问"期末考试能过吗"，掷出了圣杯！希望真的能灵验！</p>
+                </div>
+                <div class="actions">
+                    <button class="action-btn">👍 支持 (0)</button>
+                    <button class="action-btn">👎 反对 (0)</button>
+                    <button class="action-btn">↩️ 回复</button>
+                    <button class="action-btn">⚠️ 举报</button>
+                </div>
+            </div>
+            
+            <div class="floor">
+                <div class="floor-header">
+                    <div>
+                        <span class="floor-author">匿名用户sW2bR2aG</span>
+                        <span class="floor-time">发布于 01-01 15:22:08</span>
+                    </div>
+                    <span class="floor-number">2楼</span>
+                </div>
+                <div class="floor-content">
+                    <p>好玩</p>
+                </div>
+                <div class="actions">
+                    <button class="action-btn">👍 支持 (0)</button>
+                    <button class="action-btn">👎 反对 (0)</button>
+                    <button class="action-btn">↩️ 回复</button>
+                    <button class="action-btn">⚠️ 举报</button>
+                </div>
+            </div>
+
+            <div class="floor">
+                <div class="floor-header">
+                    <div>
+                        <span class="floor-author">匿名用户xP3jZ0kA</span>
+                        <span class="floor-time">发布于 01-01 23:19:21</span>
+                    </div>
+                    <span class="floor-number">3楼</span>
+                </div>
+                <div class="floor-content">
+                    <p>试了一下，问"暗恋的学长喜欢我吗"，结果是笑杯...看来要主动一点了</p>
+                </div>
+                <div class="actions">
+                    <button class="action-btn">👍 支持 (42)</button>
+                    <button class="action-btn">👎 反对 (1)</button>
+                    <button class="action-btn">↩️ 回复</button>
+                    <button class="action-btn">⚠️ 举报</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="reply-form">
+            <h3>发表回复</h3>
+            <form>
+
+                <div class="form-group">
+                    <label for="reply-content">回复内容</label>
+                    <textarea id="reply-content" placeholder="请输入回复内容..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">发表回复</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="forum-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于论坛</h3>
+                    <p>望川校园论坛成立于2005年，是望川大学最具影响力的学生交流平台。我们看见您校园生活的每一刻。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>友情链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">望川大学官网</a></li>
+                        <li><a href="#">校园新闻网</a></li>
+                        <li><a href="#">图书馆系统</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系方式</h3>
+                    <ul class="footer-links">
+                        <li>邮箱: forum@wangchuan.edu</li>
+                        <li>电话: 0571-xxxxxxx</li>
+                        <li>地址: 望川大学学生活动中心3楼</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 冬眠 版权所有</p>
+                <p class="disclaimer">※本站的内容为虚构作品，与任何真实的人物、团体或事件无关</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../scripts.js"></script>
+</body>
+</html>
