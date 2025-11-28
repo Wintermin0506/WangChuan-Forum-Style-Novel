@@ -22,13 +22,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (loginBtn) {
         loginBtn.addEventListener('click', function() {
-            alert('登录功能仅用于展示，本论坛内容均为虚构故事');
+            alert('您当前所在地区不支持！');
         });
     }
     
     if (registerBtn) {
         registerBtn.addEventListener('click', function() {
-            alert('注册功能仅用于展示，本论坛内容均为虚构故事');
+            alert('您当前所在地区不支持！');
         });
     }
     
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (adminPostLink) {
         adminPostLink.addEventListener('click', function(e) {
             e.preventDefault();
-            alert('系统通知：检测到异常访问模式。论坛部分内容可能包含未经核实的信息，请谨慎对待。');
+            alert('系统通知：检测到异常访问。论坛部分内容可能包含未经核实的信息，请谨慎对待。');
         });
     }
     
@@ -57,6 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化举报按钮功能
     initializeReportButtons();
     initializeButtonAnimations();
+    // 初始化掷杯筊模拟器
+    initializePoeSimulator();
 });
 
 // 举报按钮功能
@@ -119,3 +121,134 @@ function addButtonAnimation(button) {
         button.style.transform = 'scale(1)';
     }, 150);
 }
+
+// 掷杯筊模拟器功能
+function initializePoeSimulator() {
+    const throwBtn = document.getElementById('throwBtn');
+    const poe1 = document.getElementById('poe1');
+    const poe2 = document.getElementById('poe2');
+    const result = document.getElementById('result');
+    const history = document.getElementById('history');
+    
+    if (!throwBtn) return;
+    
+    let historyCount = 0;
+    const maxHistoryItems = 3;
+    
+    throwBtn.addEventListener('click', function() {
+        throwPoe();
+    });
+    
+    function throwPoe() {
+        // 禁用按钮防止连续点击
+        throwBtn.disabled = true;
+        throwBtn.textContent = '掷杯中...';
+        
+        // 添加投掷动画
+        addThrowAnimation();
+        
+        setTimeout(() => {
+            // 随机生成两个杯筊的结果 (0: 正面-直线面, 1: 反面-弧面)
+            const result1 = Math.random() > 0.5 ? 1 : 0;
+            const result2 = Math.random() > 0.5 ? 1 : 0;
+            
+            // 更新杯筊的显示
+            updatePoeDisplay(result1, result2);
+            
+            // 判断结果并显示
+            const { resultText, resultType, resultClass } = getPoeResult(result1, result2);
+            displayResult(resultText, resultClass);
+            
+            // 添加到历史记录
+            addToHistory(resultType, resultText);
+            
+            // 重新启用按钮
+            resetButton();
+        }, 1200);
+    }
+    
+    function addThrowAnimation() {
+        const shapes = document.querySelectorAll('.poe-shape');
+        shapes.forEach(shape => {
+            shape.style.transform = 'rotate(720deg) scale(1.1)';
+        });
+    }
+    
+    function updatePoeDisplay(result1, result2) {
+        const shape1 = poe1.querySelector('.poe-shape');
+        const shape2 = poe2.querySelector('.poe-shape');
+        
+        shape1.className = 'poe-shape ' + (result1 === 0 ? 'flat' : 'round');
+        shape2.className = 'poe-shape ' + (result2 === 0 ? 'flat' : 'round');
+        
+        // 重置动画
+        setTimeout(() => {
+            shape1.style.transform = 'rotate(0deg) scale(1)';
+            shape2.style.transform = 'rotate(0deg) scale(1)';
+        }, 100);
+    }
+    
+    function getPoeResult(result1, result2) {
+        let resultText, resultType, resultClass;
+        
+        if ((result1 === 0 && result2 === 1) || (result1 === 1 && result2 === 0)) {
+            resultText = '圣杯。所求所问之事可行，吉。';
+            resultType = '圣杯';
+            resultClass = 'success';
+        } else if (result1 === 0 && result2 === 0) {
+            resultText = '笑杯。所求所问之事情况不明。';
+            resultType = '笑杯';
+            resultClass = 'warning';
+        } else {
+            resultText = '阴杯。所求所问之事不可行，凶。';
+            resultType = '阴杯';
+            resultClass = 'error';
+        }
+        
+        return { resultText, resultType, resultClass };
+    }
+    
+    function displayResult(text, className) {
+        result.textContent = text;
+        result.className = `poe-result ${className}`;
+    }
+    
+    function addToHistory(type, text) {
+        historyCount++;
+        
+        // 移除"暂无记录"
+        if (history.querySelector('.poe-history-item').textContent === '暂无记录') {
+            history.innerHTML = '';
+        }
+        
+        const historyItem = document.createElement('div');
+        historyItem.className = 'poe-history-item';
+        
+        const typeClass = type === '圣杯' ? 'shengbei' : type === '笑杯' ? 'xiaobei' : 'yinbei';
+        
+        historyItem.innerHTML = `
+            <div>
+                <span class="history-type ${typeClass}">${type}</span>
+                <span>${text.replace(/🎉|😊|😔/g, '')}</span>
+            </div>
+            <span style="color: #666; font-size: 12px;">#${historyCount}</span>
+        `;
+        
+        // 限制历史记录数量
+        const historyItems = history.querySelectorAll('.poe-history-item');
+        if (historyItems.length >= maxHistoryItems) {
+            history.removeChild(historyItems[0]);
+        }
+        
+        history.appendChild(historyItem);
+        
+        // 滚动到最新记录
+        history.scrollTop = history.scrollHeight;
+    }
+    
+    function resetButton() {
+        throwBtn.disabled = false;
+        throwBtn.textContent = '掷杯筊';
+    }
+}
+
