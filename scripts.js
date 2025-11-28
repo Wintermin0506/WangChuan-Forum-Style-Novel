@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeButtonAnimations();
     // 初始化掷杯筊模拟器
     initializePoeSimulator();
+    // 初始化图片放大功能
+initializeImageEnlargement();
 });
 
 // 举报按钮功能
@@ -252,3 +254,56 @@ function initializePoeSimulator() {
     }
 }
 
+// 图片放大功能
+function initializeImageEnlargement() {
+    // 创建图片覆盖层
+    const overlay = document.createElement('div');
+    overlay.className = 'image-overlay';
+    overlay.innerHTML = `
+        <button class="close-overlay">&times;</button>
+        <img class="enlarged-image" src="" alt="放大图片">
+    `;
+    document.body.appendChild(overlay);
+    
+    const enlargedImage = overlay.querySelector('.enlarged-image');
+    const closeBtn = overlay.querySelector('.close-overlay');
+    
+    // 为所有可放大的图片添加点击事件
+    document.addEventListener('click', function(e) {
+        const img = e.target.closest('.enlargeable-image');
+        if (img) {
+            e.preventDefault();
+            // 显示放大图片
+            enlargedImage.src = img.src;
+            enlargedImage.alt = img.alt;
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+    });
+    
+    // 关闭覆盖层
+    function closeOverlay() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = ''; // 恢复滚动
+        setTimeout(() => {
+            enlargedImage.src = '';
+        }, 300);
+    }
+    
+    // 点击关闭按钮
+    closeBtn.addEventListener('click', closeOverlay);
+    
+    // 点击覆盖层背景关闭
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+            closeOverlay();
+        }
+    });
+    
+    // 按ESC键关闭
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            closeOverlay();
+        }
+    });
+}
