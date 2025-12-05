@@ -770,17 +770,17 @@ button, .btn {
     background: rgba(46, 204, 113, 0.1);
 }
 
-.action-btn:nth-child(2):hover { /* 反对按钮 */
+/* .action-btn:nth-child(2):hover { /* 反对按钮 
     color: var(--danger-color);
     background: rgba(231, 76, 60, 0.1);
-}
+} */
 
-.action-btn:nth-child(3):hover { /* 回复按钮 */
+/*.action-btn:nth-child(3):hover { /* 回复按钮 
     color: #2b84d2;
     background: rgba(52, 152, 219, 0.1);
-}
+}*/
 
-.action-btn:nth-child(4):hover { /* 举报按钮 */
+.action-btn:nth-child(2):hover { /* 举报按钮 原来数字是4 */
     color: var(--accent-color);
     background: rgba(142, 68, 173, 0.1);
 }
