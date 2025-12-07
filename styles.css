@@ -188,6 +188,8 @@ button, .btn {
 .btn-register:hover {
     background: #c0392b;
 }
+/* 移动端导航菜单结束 */
+/* 基础样式 - 移动优先结束 */
 
 /* 主要内容区 */
 .main-content {
@@ -320,6 +322,7 @@ button, .btn {
     font-size: 0.8rem;
     font-weight: bold;
 }
+/* 主要内容区结束 */
 
 /* 最新帖子 */
 .posts-list {
@@ -384,6 +387,7 @@ button, .btn {
     border-radius: 3px;
     font-size: 0.8rem;
 }
+/* 最新帖子结束 */
 
 /* 论坛统计 */
 .forum-stats {
@@ -422,7 +426,7 @@ button, .btn {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
-
+/* 论坛统计结束 */
 
 /* 分区页面样式 */
 .section-header {
@@ -558,7 +562,10 @@ button, .btn {
         text-align: right;
     }
 }
+/* 分区结束 */
+
 /* 帖子页面样式 */
+/* 主帖 */
 .post-detail-container {
     background: white;
     border-radius: 10px;
@@ -600,15 +607,9 @@ button, .btn {
 .post-detail-content p {
     margin-bottom: 0.1rem;
 }
+/* 主贴结束 */
 
-.post-detail-content img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 1rem 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
+/* 楼层 */
 .floor {
     position: relative;
     border-bottom: 1px solid #ecf0f1;
@@ -660,78 +661,227 @@ button, .btn {
     font-style: italic;
     color: #7f8c8d;
 }
+/* 楼层结束 */
 
-/* 图片放大功能样式 */
-.post-detail-content img {
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    border-radius: 8px;
+/* 多图画廊样式 */
+.multi-image-gallery {
     margin: 1rem 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.post-detail-content img:hover {
-    transform: scale(1.02);
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    width: 100%;
+    max-width: 500px; /* 限制最大宽度 */
 }
 
-/* 图片放大覆盖层 */
-.image-overlay {
+.image-item {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* 1:1 正方形比例 */
+    overflow: hidden;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f5f5f5;
+}
+
+.image-item img.thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block; /* 添加这个 */
+    transition: transform 0.3s ease;
+}
+
+.image-item:hover img.thumbnail {
+    transform: scale(1.05);
+}
+
+/* 图片数量指示器 */
+.image-item.multiple::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 20px 20px 0;
+    border-color: transparent rgba(0,0,0,0.7) transparent transparent;
+}
+
+.image-item.multiple::before {
+    content: attr(data-count);
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    color: white;
+    font-size: 10px;
+    z-index: 1;
+}
+
+/* 图片查看器样式 */
+.image-viewer {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
+    z-index: 9999;
 }
 
-.image-overlay.active {
-    opacity: 1;
-    visibility: visible;
+.image-viewer.active {
+    display: block;
 }
 
-.enlarged-image {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-    transform: scale(0.8);
-    transition: transform 0.3s ease;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-.image-overlay.active .enlarged-image {
-    transform: scale(1);
-}
-
-/* 图片关闭放大按钮 */
-.close-overlay {
+.viewer-overlay {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255,255,255,0.2);
-    color: white;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.viewer-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    max-width: 1200px;
+    max-height: 800px;
+}
+
+.viewer-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
     border: none;
-    width: 40px;
-    height: 40px;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 10;
+}
+
+.viewer-close:hover {
+    opacity: 0.8;
+}
+
+.viewer-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    font-size: 1.5rem;
+    font-size: 20px;
     cursor: pointer;
     display: flex;
-    justify-content: center;
     align-items: center;
-    transition: background 0.3s ease;
+    justify-content: center;
+    transition: background-color 0.3s;
+    z-index: 10;
 }
 
-.close-overlay:hover {
-    background: rgba(255,255,255,0.3);
+.viewer-nav:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
+
+.viewer-prev {
+    left: 20px;
+}
+
+.viewer-next {
+    right: 20px;
+}
+
+.viewer-image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+#viewer-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.viewer-info {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+}
+
+/* 响应式调整 */
+@media (max-width: 767px) {
+    .image-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+    }
+    
+    .viewer-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .viewer-prev {
+        left: 10px;
+    }
+    
+    .viewer-next {
+        right: 10px;
+    }
+}
+
+/* 对于2张或4张图片的特殊布局 */
+.image-grid.count-2 .image-item:first-child,
+.image-grid.count-4 .image-item:first-child {
+    grid-column: span 2;
+    padding-bottom: 50%; /* 变为2:1矩形 */
+}
+
+.image-grid.count-2 .image-item:nth-child(2),
+.image-grid.count-4 .image-item:nth-child(2) {
+    grid-column: span 2;
+    padding-bottom: 50%;
+}
+
+/* 对于4张图片的特殊布局 */
+.image-grid.count-4 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.image-grid.count-4 .image-item {
+    padding-bottom: 100%;
+}
+
+.image-grid.count-4 .image-item:first-child {
+    grid-column: span 2;
+    padding-bottom: 50%;
+}
+/* 多图画廊样式结束 */
 
 /* 帖子交互按钮样式 */
 .actions {
@@ -804,7 +954,9 @@ button, .btn {
         margin-right: 0;
     }
 }
+/* 帖子交互按钮样式结束 */
 
+/* 回复区 */
 .reply-form {
     background: white;
     padding: 2rem;
@@ -855,6 +1007,7 @@ button, .btn {
 .submit-btn:hover {
     background: #ae3729;
 }
+/* 回复区结束 */
 
 /* 掷杯筊模拟器样式 */
 .poe-container {
@@ -1027,6 +1180,7 @@ button, .btn {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+/* 掷杯筊模拟器样式结束 */
 
 /* 页脚 */
 .forum-footer {

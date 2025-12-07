@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeButtonAnimations();
     // 初始化掷杯筊模拟器
     initializePoeSimulator();
-    // 初始化图片放大功能
-initializeImageEnlargement();
+    // 初始化图片查看器（新的多图功能）
+    initializeImageViewer();
 });
 
 // 举报按钮功能
@@ -254,56 +254,208 @@ function initializePoeSimulator() {
     }
 }
 
-// 图片放大功能
-function initializeImageEnlargement() {
-    // 创建图片覆盖层
-    const overlay = document.createElement('div');
-    overlay.className = 'image-overlay';
-    overlay.innerHTML = `
-        <button class="close-overlay">&times;</button>
-        <img class="enlarged-image" src="" alt="放大图片">
-    `;
-    document.body.appendChild(overlay);
+// 图片多图查看器功能
+function initializeImageViewer() {
+    // 如果HTML中没有图片查看器，创建一个
+    if (!document.getElementById('image-viewer')) {
+        const viewerHTML = `
+            <div id="image-viewer" class="image-viewer">
+                <div class="viewer-overlay"></div>
+                <div class="viewer-content">
+                    <button class="viewer-close"><i class="fas fa-times"></i></button>
+                    <button class="viewer-nav viewer-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="viewer-nav viewer-next"><i class="fas fa-chevron-right"></i></button>
+                    <div class="viewer-image-container">
+                        <img id="viewer-image" src="" alt="">
+                        <div class="viewer-info">
+                            <span id="viewer-index">1 / 1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', viewerHTML);
+    }
     
-    const enlargedImage = overlay.querySelector('.enlarged-image');
-    const closeBtn = overlay.querySelector('.close-overlay');
+    const viewer = document.getElementById('image-viewer');
+    const viewerImage = document.getElementById('viewer-image');
+    const viewerIndex = document.getElementById('viewer-index');
+    const closeBtn = viewer.querySelector('.viewer-close');
+    const prevBtn = viewer.querySelector('.viewer-prev');
+    const nextBtn = viewer.querySelector('.viewer-next');
+    const overlay = viewer.querySelector('.viewer-overlay');
     
-    // 为所有可放大的图片添加点击事件
-    document.addEventListener('click', function(e) {
-        const img = e.target.closest('.enlargeable-image');
-        if (img) {
-            e.preventDefault();
-            // 显示放大图片
-            enlargedImage.src = img.src;
-            enlargedImage.alt = img.alt;
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden'; // 防止背景滚动
+    // 存储所有图片数据
+    let allImages = [];
+    let currentGroupImages = [];
+    let currentIndex = 0;
+    
+    // 收集所有图片
+    function collectImages() {
+        allImages = [];
+        
+        // 找到所有多图容器
+        const galleries = document.querySelectorAll('.multi-image-gallery');
+        
+        galleries.forEach((gallery, groupIndex) => {
+            const imageItems = gallery.querySelectorAll('.image-item');
+            
+            imageItems.forEach((item, itemIndex) => {
+                const img = item.querySelector('img');
+                if (img) {
+                    allImages.push({
+                        src: img.src,
+                        alt: img.alt || `图片 ${itemIndex + 1}`,
+                        group: groupIndex,
+                        index: itemIndex,
+                        element: item
+                    });
+                    
+                    // 为图片添加点击事件
+                    item.addEventListener('click', () => {
+                        openImageViewer(groupIndex, itemIndex);
+                    });
+                }
+            });
+        });
+    }
+    
+    // 打开图片查看器
+    function openImageViewer(groupIndex, imageIndex) {
+        // 获取当前组的所有图片
+        currentGroupImages = allImages.filter(img => img.group === groupIndex);
+        
+        if (currentGroupImages.length === 0) return;
+        
+        // 确保索引在有效范围内
+        currentIndex = Math.max(0, Math.min(imageIndex, currentGroupImages.length - 1));
+        
+        // 更新显示
+        updateViewer();
+        
+        // 显示查看器
+        viewer.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // 更新查看器
+    function updateViewer() {
+        if (currentGroupImages.length === 0) return;
+        
+        const currentImage = currentGroupImages[currentIndex];
+        viewerImage.src = currentImage.src;
+        viewerImage.alt = currentImage.alt;
+        viewerIndex.textContent = `${currentIndex + 1} / ${currentGroupImages.length}`;
+        
+        // 更新导航按钮状态
+        updateNavButtons();
+    }
+    
+    // 更新导航按钮状态
+    function updateNavButtons() {
+        // 第一张图片时禁用左箭头
+        if (currentIndex === 0) {
+            prevBtn.style.opacity = '0';
+            prevBtn.style.cursor = 'auto';
+            prevBtn.disabled = true;
+        } else {
+            prevBtn.style.opacity = '1';
+            prevBtn.style.cursor = 'pointer';
+            prevBtn.disabled = false;
         }
-    });
+        
+        // 最后一张图片时禁用右箭头
+        if (currentIndex === currentGroupImages.length - 1) {
+            nextBtn.style.opacity = '0';
+            nextBtn.style.cursor = 'auto';
+            nextBtn.disabled = true;
+        } else {
+            nextBtn.style.opacity = '1';
+            nextBtn.style.cursor = 'pointer';
+            nextBtn.disabled = false;
+        }
+    }
     
-    // 关闭覆盖层
-    function closeOverlay() {
-        overlay.classList.remove('active');
-        document.body.style.overflow = ''; // 恢复滚动
+    // 上一张图片
+    function goToPrevImage() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateViewer();
+        }
+    }
+    
+    // 下一张图片
+    function goToNextImage() {
+        if (currentIndex < currentGroupImages.length - 1) {
+            currentIndex++;
+            updateViewer();
+        }
+    }
+    
+    // 关闭查看器
+    function closeViewer() {
+        viewer.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // 清空图片源
         setTimeout(() => {
-            enlargedImage.src = '';
+            viewerImage.src = '';
         }, 300);
     }
     
-    // 点击关闭按钮
-    closeBtn.addEventListener('click', closeOverlay);
+    // 绑定事件
+    function bindEvents() {
+        // 关闭按钮
+        closeBtn.addEventListener('click', closeViewer);
+        overlay.addEventListener('click', closeViewer);
+        
+        // 导航按钮
+        prevBtn.addEventListener('click', goToPrevImage);
+        nextBtn.addEventListener('click', goToNextImage);
+        
+        // 键盘导航
+        document.addEventListener('keydown', (e) => {
+            if (!viewer.classList.contains('active')) return;
+            
+            switch(e.key) {
+                case 'Escape':
+                    closeViewer();
+                    break;
+                case 'ArrowLeft':
+                    if (!prevBtn.disabled) goToPrevImage();
+                    break;
+                case 'ArrowRight':
+                    if (!nextBtn.disabled) goToNextImage();
+                    break;
+            }
+        });
+        
+        // 触摸滑动支持
+        let touchStartX = 0;
+        
+        viewerImage.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        viewerImage.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const diff = touchEndX - touchStartX;
+            const swipeThreshold = 50;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0 && !prevBtn.disabled) {
+                    // 向右滑动 - 上一张
+                    goToPrevImage();
+                } else if (diff < 0 && !nextBtn.disabled) {
+                    // 向左滑动 - 下一张
+                    goToNextImage();
+                }
+            }
+        }, { passive: true });
+    }
     
-    // 点击覆盖层背景关闭
-    overlay.addEventListener('click', function(e) {
-        if (e.target === overlay) {
-            closeOverlay();
-        }
-    });
-    
-    // 按ESC键关闭
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) {
-            closeOverlay();
-        }
-    });
+    // 初始化
+    collectImages();
+    bindEvents();
 }
+
