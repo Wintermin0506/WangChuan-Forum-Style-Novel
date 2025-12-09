@@ -834,7 +834,12 @@ button, .btn {
 }
 
 /* 响应式调整 */
+/* 移动端隐藏导航箭头 */
 @media (max-width: 767px) {
+    .viewer-nav {
+        display: none;
+    }
+    
     .image-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 3px;
@@ -852,6 +857,13 @@ button, .btn {
     
     .viewer-next {
         right: 10px;
+    }
+}
+
+/* 电脑端显示导航箭头 */
+@media (min-width: 768px) {
+    .viewer-nav {
+        display: flex;
     }
 }
 
